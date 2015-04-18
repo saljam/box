@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, height=device-height, user-scalable=no">
+<title>Box-Joint-O-Matic</title>
+<link rel="stylesheet" href="/box/style.css">
+<meta name="author" content="Salman Aljammaz">
+<script src="/box/jquery-2.1.0.min.js"></script>
+<body>
+
+<h1 itemprop="name">Box-Joint-O-Matic</h1>
+
+<form id="svgform" action="/box/svg" method="post">
+<label for="length">outside dimentions</label>
+<input id="length" type="number" name="length" value="50"> ×
+<input id="width" type="number" name="width" value="100"> ×
+<input id="height" type="number" name="height" value="50">
+<br>
+<label for="tabwidth">tab width</label>
+<input id="tabwidth" type="number" name="tabwidth" value="10">
+<label for="thickness">material thickness</label>
+<input id="thickness" type="number" name="thickness" value="3">
+<label for="correction">kerf compensation</label>
+<input id="correction" type="number" step="0.02" name="correction" value="0.1">
+<br>
+</form>
+
+<div id="svg">
+</div>
+
+<footer class="mono">&lt;3</footer>
+
+<script>
+$(function() {
+	$("#svgform").submit(function(e) {
+		$.ajax({
+			url: "/box/svg",
+			type: 'POST',
+			data:  $('#svgform').serialize(),
+			success: function(data) {
+				var encoded = btoa(data);
+
+				$("#svg").html(data);
+				$("#svg").append($("<p><a href-lang='image/svg+xml' href='data:image/svg+xml;base64,\n"+encoded+"' title='box.svg' download='box.svg'>Download</a>"));
+			},
+			error: function() {
+				$("#svg").html("err :-/")
+			}           
+		});
+		e.preventDefault();
+	});
+
+	$("#svgform").on("input", function(){
+		$("#svgform").submit()
+	});
+	
+	$("#svgform").submit()
+});
+</script>
