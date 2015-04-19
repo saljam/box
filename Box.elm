@@ -56,17 +56,20 @@ side length tabsize kerf thickness tabstart flip =
                                 else [(0, nthy last), (0, nthy last + firsttab)])
 
 translate x y = List.map (\(a,b) -> (x+a,y+b))
+
 rotate = List.map (\(a,b) -> (b,a))
 
--- TODO fixup corners, ala:
-{-	top[len(top)-1].x = left[0].x
-	left[0].y = top[len(top)-1].y
-	left[len(left)-1].y = bottom[0].y
-	bottom[0].x = left[len(left)-1].x
-	bottom[len(bottom)-1].x = right[0].x
-	right[0].y = bottom[len(bottom)-1].y
-	right[len(right)-1].y = top[0].y
-	top[0].x = right[len(right)-1].x -}
+trim path prev next horizontal =
+  let
+    a = List.head path
+    a' = List.head <| List.reverse prev
+    z = List.head <| List.reverse path
+    z' = List.head next
+    body = List.take (List.length path - 2) <| List.tail path
+  in
+    if horizontal then (fst a', snd a) :: body ++ [(fst z', snd z)]
+                  else (fst a, snd a') :: body ++ [(fst z, snd z')]
+
 panel length width tabsize kerf thickness tabs =
   let
     left   = side length tabsize kerf thickness tabs.left False
@@ -76,8 +79,12 @@ panel length width tabsize kerf thickness tabs =
              |> List.reverse |> translate (width-thickness) 0
     top    = side width tabsize kerf thickness tabs.top False
              |> rotate |> List.reverse
+    left'   = trim left top bottom False
+    bottom' = trim bottom left right True
+    right'  = trim right bottom top False
+    top'    = trim top right left True
   in
-    left ++ bottom ++ right ++ top
+    left' ++ bottom' ++ right' ++ top'
 
 pathString path =
   let

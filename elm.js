@@ -349,7 +349,7 @@ Elm.Box.make = function (_elm) {
                     ",",
                     $Basics.toString(_v0._1)));}
                _U.badCase($moduleName,
-               "on line 84, column 19 to 50");
+               "on line 91, column 19 to 50");
             }();
          };
          return $String.join(" ")(A2($List.map,
@@ -357,6 +357,35 @@ Elm.Box.make = function (_elm) {
          path));
       }();
    };
+   var trim = F4(function (path,
+   prev,
+   next,
+   horizontal) {
+      return function () {
+         var body = $List.take($List.length(path) - 2)($List.tail(path));
+         var z$ = $List.head(next);
+         var z = $List.head($List.reverse(path));
+         var a$ = $List.head($List.reverse(prev));
+         var a = $List.head(path);
+         return horizontal ? A2($List._op["::"],
+         {ctor: "_Tuple2"
+         ,_0: $Basics.fst(a$)
+         ,_1: $Basics.snd(a)},
+         A2($Basics._op["++"],
+         body,
+         _L.fromArray([{ctor: "_Tuple2"
+                       ,_0: $Basics.fst(z$)
+                       ,_1: $Basics.snd(z)}]))) : A2($List._op["::"],
+         {ctor: "_Tuple2"
+         ,_0: $Basics.fst(a)
+         ,_1: $Basics.snd(a$)},
+         A2($Basics._op["++"],
+         body,
+         _L.fromArray([{ctor: "_Tuple2"
+                       ,_0: $Basics.fst(z)
+                       ,_1: $Basics.snd(z$)}])));
+      }();
+   });
    var rotate = $List.map(function (_v4) {
       return function () {
          switch (_v4.ctor)
@@ -365,7 +394,7 @@ Elm.Box.make = function (_elm) {
                    ,_0: _v4._1
                    ,_1: _v4._0};}
          _U.badCase($moduleName,
-         "on line 59, column 31 to 34");
+         "on line 60, column 31 to 34");
       }();
    });
    var translate = F2(function (x,
@@ -512,6 +541,11 @@ Elm.Box.make = function (_elm) {
          thickness,
          $Basics.not(tabs.bottom),
          true)));
+         var right$ = A4(trim,
+         right,
+         bottom,
+         top,
+         false);
          var left = A6(side,
          length,
          tabsize,
@@ -519,13 +553,28 @@ Elm.Box.make = function (_elm) {
          thickness,
          tabs.left,
          false);
-         return A2($Basics._op["++"],
+         var left$ = A4(trim,
          left,
-         A2($Basics._op["++"],
+         top,
          bottom,
-         A2($Basics._op["++"],
+         false);
+         var bottom$ = A4(trim,
+         bottom,
+         left,
          right,
-         top)));
+         true);
+         var top$ = A4(trim,
+         top,
+         right,
+         left,
+         true);
+         return A2($Basics._op["++"],
+         left$,
+         A2($Basics._op["++"],
+         bottom$,
+         A2($Basics._op["++"],
+         right$,
+         top$)));
       }();
    });
    var box = F6(function (width,
@@ -744,6 +793,7 @@ Elm.Box.make = function (_elm) {
                      ,side: side
                      ,translate: translate
                      ,rotate: rotate
+                     ,trim: trim
                      ,panel: panel
                      ,pathString: pathString
                      ,box: box
