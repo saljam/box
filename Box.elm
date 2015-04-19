@@ -28,6 +28,7 @@ even i = i % 2 == 0
 
 -- TODO replace flip with mirror transform
 -- TODO simplify this mess...
+-- TODO sort out kerf
 side length tabsize kerf thickness tabstart flip =
   let
     (tablen'', gaplen'', ntab) = (segmentSizes length tabsize)
@@ -183,5 +184,3 @@ main = page <~ (Signal.subscribe widthc)
              ~ (Signal.subscribe tabc)
              ~ (Signal.subscribe kerfc)
              ~ (Signal.subscribe thicknessc)
-
---main = Text.asText (segmentSizes 10 2)
